@@ -1,6 +1,5 @@
 # GO Language Quick Reference Sheet
 
-# Table of Contents
 - [Go Language LLM (AI) System Prompt](#go-language-llm-ai-system-prompt)
 - [Go Standard Library Reference](#go-standard-library-reference)
 - [Go Language Syntax & Features Reference](#go-language-syntax--features-reference)
