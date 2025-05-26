@@ -17,12 +17,12 @@
 | Function | Description |
 |----------|-------------|
 | `ReadFile` | Reads the entire content of a file and returns it as a string. |
-| `ReadLines` | Reads a file line-by-line into a slice of strings. |
-| `WriteFile` | Writes content to a file, overwriting it if it exists. |
-| `AppendToFile` | Appends content to a file, or creates it if it doesn't exist. |
-| `FileExists` | Checks if a file or directory exists. |
-| `ListFiles` | Lists all non-directory file names in a folder. |
-| `FindFilesByExtension` | Recursively finds all files with a specific extension. |
+| `ReadLines` | Reads a file line-by-line and returns the contents as a slice of strings. |
+| `WriteFile` | Writes the specified string content to a file, overwriting it if it exists. |
+| `AppendToFile` | Appends string content to a file, or creates the file if it doesn't exist. |
+| `FileExists` | Returns `true` if a file or directory exists at the given path, otherwise `false`. |
+| `ListFiles` | Lists all file names (excluding directories) in a specified directory. |
+| `FindFilesByExtension` | Recursively searches a directory for files matching a given file extension. |
 
 ---
 
