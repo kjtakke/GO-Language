@@ -8,7 +8,7 @@
 - [Bash](#bash)
 - [Mutex](#mutex)
 - [Logging](#logging)
-  - [Tedge](#tedge)
+- [Tedge](#tedge)
 
 ---
 
@@ -116,7 +116,7 @@
 
 ---
 
-### Tedge
+## Tedge
 
 | Function | Description |
 |----------|-------------|
