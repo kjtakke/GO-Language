@@ -1,5 +1,3 @@
-# GO Language Quick Reference Sheet
-
 - [Go Language LLM (AI) System Prompt](#go-language-llm-ai-system-prompt)
 - [Go Standard Library Reference](#go-standard-library-reference)
 - [Go Language Syntax & Features Reference](#go-language-syntax--features-reference)
@@ -4805,6 +4803,7 @@ func main() {
 - [Bash](#bash)
 - [Mutex](#mutex)
 - [Logging](#logging)
+- [Tedge](#tedge)
   
 ## Files
 
@@ -5431,4 +5430,129 @@ func FindFilesByExtension(root, ext string) ([]string, error) {
 
     return matched, err
 }
+```
+
+## Tedge
+`utils/tedge.go`
+
+```go
+package utils
+
+import (
+    "encoding/json"
+    "fmt"
+    "time"
+
+    mqtt "github.com/eclipse/paho.mqtt.golang"
+)
+
+// TedgePublisher wraps an MQTT client for tedge publishing.
+type TedgePublisher struct {
+    Client   mqtt.Client
+    DeviceID string
+}
+
+// NewTedgePublisher connects to the local tedge MQTT broker.
+func NewTedgePublisher(deviceID string) (*TedgePublisher, error) {
+    opts := mqtt.NewClientOptions().
+        AddBroker("tcp://localhost:1883").
+        SetClientID("tedge-util-" + deviceID).
+        SetCleanSession(true).
+        SetConnectTimeout(5 * time.Second)
+
+    client := mqtt.NewClient(opts)
+    token := client.Connect()
+    if token.Wait() && token.Error() != nil {
+        return nil, token.Error()
+    }
+
+    return &TedgePublisher{
+        Client:   client,
+        DeviceID: deviceID,
+    }, nil
+}
+
+// PublishAlarm publishes an alarm (severity: "critical", "major", "minor", "warning").
+func (t *TedgePublisher) PublishAlarm(alarmType, severity, text string) error {
+    payload := map[string]interface{}{
+        "text":     text,
+        "severity": severity,
+        "time":     time.Now().Format(time.RFC3339),
+    }
+    topic := fmt.Sprintf("te/device/%s/alarm/%s", t.DeviceID, alarmType)
+    return t.publishJSON(topic, payload)
+}
+
+// PublishEvent publishes an event.
+func (t *TedgePublisher) PublishEvent(eventType, text string) error {
+    payload := map[string]interface{}{
+        "text": text,
+        "time": time.Now().Format(time.RFC3339),
+    }
+    topic := fmt.Sprintf("te/device/%s/event/%s", t.DeviceID, eventType)
+    return t.publishJSON(topic, payload)
+}
+
+// PublishMeasurement publishes a measurement group (e.g. "temperature") and value.
+func (t *TedgePublisher) PublishMeasurement(group string, measurements map[string]float64) error {
+    payload := map[string]interface{}{
+        "time": time.Now().Format(time.RFC3339),
+        group: map[string]map[string]float64{},
+    }
+
+    nested := map[string]float64{}
+    for k, v := range measurements {
+        nested[k] = v
+    }
+
+    payload[group] = map[string]interface{}{}
+    for k, v := range measurements {
+        payload[group].(map[string]interface{})[k] = map[string]float64{"value": v}
+    }
+
+    topic := fmt.Sprintf("te/device/%s/measurements", t.DeviceID)
+    return t.publishJSON(topic, payload)
+}
+
+// publishJSON publishes the given payload to the topic as JSON.
+func (t *TedgePublisher) publishJSON(topic string, payload interface{}) error {
+    bytes, err := json.Marshal(payload)
+    if err != nil {
+        return err
+    }
+    token := t.Client.Publish(topic, 0, false, bytes)
+    token.Wait()
+    return token.Error()
+}
+
+```
+
+* * *
+
+### Functions Included
+
+| Function | Description |
+| --- | --- |
+| `NewTedgePublisher` | Connects to the local tedge MQTT broker |
+| `PublishAlarm` | Publishes an alarm message with type, severity, and text |
+| `PublishEvent` | Publishes an event with type and text |
+| `PublishMeasurement` | Publishes a structured measurement group with multiple values |
+| `publishJSON` | Internal helper to encode and publish JSON to MQTT |
+
+* * *
+
+### Example Usage
+```go
+publisher, err := utils.NewTedgePublisher("device123")
+if err != nil {
+    log.Fatal("Connection error:", err)
+}
+
+_ = publisher.PublishAlarm("overheat", "critical", "CPU temperature exceeded threshold")
+_ = publisher.PublishEvent("startup", "Device started successfully")
+_ = publisher.PublishMeasurement("temperature", map[string]float64{
+    "cpu": 78.4,
+    "gpu": 65.2,
+})
+
 ```
