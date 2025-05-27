@@ -9,6 +9,7 @@
 - [Mutex](#mutex)
 - [Logging](#logging)
 - [Tedge](#tedge)
+- [Mongo](#mongo)
 
 ---
 
@@ -125,3 +126,14 @@
 | `PublishEvent` | Publishes an event message to the tedge broker. |
 | `PublishMeasurement` | Publishes measurement data as a nested structure. |
 | `publishJSON` | Internal method to publish JSON-formatted data to MQTT. |
+
+## Mongo
+
+| Function | Description |
+|----------|-------------|
+| `Connect` | Establishes a connection to MongoDB and returns a `DB` wrapper for the specified collection. |
+| `InsertOne` | Inserts a single document into the collection. |
+| `FindAll` | Retrieves all documents from the collection matching the specified filter. |
+| `UpdateOne` | Updates the first document matching the filter with the provided update. |
+| `DeleteOne` | Deletes the first document from the collection that matches the specified filter. |
+| `Disconnect` | Gracefully closes the MongoDB client connection. |
