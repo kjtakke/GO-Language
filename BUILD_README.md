@@ -8,9 +8,9 @@ This Bash script is designed to build, detect, and run the GO application across
 - [Supported Targets](#supported-targets)
 - [Build Process](#build-process)
 - [Target Detection](#target-detection)
+- [Testing](#testing)
 - [Examples](#examples)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Usage
 
@@ -19,6 +19,7 @@ The script accepts the following command-line arguments:
 - `--build`: Build all target binaries to the `./bin/` directory.
 - `--which`: Display the appropriate binary for the current host.
 - `--run`: Detect and execute the matching binary.
+- `--test`: Run all Go tests recursively with verbose output.
 - `--help` or `-h`: Show the help message.
 
 You can use these options in any combination. If no arguments are provided, the script will show the help message by default.
@@ -63,6 +64,19 @@ The script includes logic to detect the current system's operating system and ar
 
 The detection process uses `uname -s` for the OS and `uname -m` for the architecture, mapping these to the corresponding Go environment variables.
 
+
+## Testing
+
+When the `--test` flag is used, the script will:
+
+- Run `go test ./... -v` from the root of the project.
+    
+- Output results in verbose mode for all packages.
+    
+- Exit with a non-zero status code if any tests fail.
+    
+
+This helps ensure your application builds and behaves correctly across platforms.
 ## Examples
 
 ### Building for all targets
