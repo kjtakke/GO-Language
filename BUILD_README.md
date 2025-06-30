@@ -1,6 +1,6 @@
 # Build Script
 
-This Bash script is designed to build, detect, and run the ReadyFleet TAC application across multiple platforms and architectures. It supports a wide range of operating systems and CPU architectures, making it highly versatile for cross-platform development and deployment.
+This Bash script is designed to build, detect, and run the GO application across multiple platforms and architectures. It supports a wide range of operating systems and CPU architectures, making it highly versatile for cross-platform development and deployment.
 
 ## Table of Contents
 
