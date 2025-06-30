@@ -40,12 +40,14 @@ for arg in "$@"; do
     --build) DO_BUILD=true ;;
     --which) DO_WHICH=true ;;
     --run) DO_RUN=true ;;
+    --test) DO_TEST=true ;;
     --help|-h|"")
       echo "Usage: ./build.sh [--build] [--which] [--run] [--help]"
       echo
       echo "  --build     Build all target binaries to ./bin/"
       echo "  --which     Display the appropriate binary for this host"
       echo "  --run       Detect and execute the matching binary"
+      echo "  --test      Run Go tests with verbose output"
       echo "  --help, -h  Show this help message"
       exit 0
       ;;
@@ -156,4 +158,12 @@ if $DO_WHICH || $DO_RUN; then
     echo "   (Check that you have built it via --build)"
     exit 1
   fi
+fi
+
+# ----------------------------------------
+# TEST
+# ----------------------------------------
+if $DO_TEST; then
+  echo "🧪 Running tests..."
+  go test ./... -v
 fi
